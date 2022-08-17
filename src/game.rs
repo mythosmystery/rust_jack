@@ -17,15 +17,11 @@ impl Game {
     }
     pub fn game_loop(&mut self) {
         loop {
-            self.player.draw(&mut self.deck);
-            self.dealer.draw(&mut self.deck);
-            self.player.draw(&mut self.deck);
-            self.dealer.draw(&mut self.deck);
-            println!("{:#?}", self.player.hand);
+            self.init_turn();
             self.turn_loop();
             self.dealer.dealer_choice(&mut self.deck);
             println!("{}", self.get_result());
-            // println!("{:#?}", self.dealer.hand);
+            println!("Dealer: {}", self.dealer.score());
             if Confirm::new()
                 .with_prompt("Play again?")
                 .interact()
@@ -52,6 +48,14 @@ impl Game {
             "Draw!".to_string()
         }
     }
+    pub fn init_turn(&mut self) {
+        self.player.draw(&mut self.deck);
+        self.dealer.draw(&mut self.deck);
+        self.player.draw(&mut self.deck);
+        self.dealer.draw(&mut self.deck);
+        println!("{:#?}", self.player.hand);
+        println!("{}", self.player.score());
+    }
     pub fn turn_loop(&mut self) {
         loop {
             if self.player.score() > 21 {
@@ -74,6 +78,7 @@ impl Game {
                     println!("Hit");
                     self.player.draw(&mut self.deck);
                     println!("{:#?}", self.player.hand);
+                    println!("Score: {}", self.player.score());
                 }
                 _ => {
                     println!("Invalid choice");
